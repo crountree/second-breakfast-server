@@ -1,0 +1,25 @@
+{
+  "name": "second-breakfast-server",
+  "version": "1.0.0",
+  "description": "a server for a voting app",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crountree/second-breakfast-server.git"
+  },
+  "keywords": [
+    "server"
+  ],
+  "author": "Cody Rountree, Ian McElroy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crountree/second-breakfast-server/issues"
+  },
+  "homepage": "https://github.com/crountree/second-breakfast-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
