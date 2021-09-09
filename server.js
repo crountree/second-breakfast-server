@@ -68,22 +68,26 @@ app.post("/data", (req, res) => {
   let errors = 0;
   let newRestaurants =
     data &&
-    data.map((item) => {
-      if (!item.name) {
-        errors += 1;
-        return;
-      } else {
-        let restaurant = {
-          id: nextId,
-          name: item.name,
-          servesBeer: item.servesBeer ? item.servesBeer : false,
-          type: item.type ? item.type : "",
-          description: item.description ? item.description : "",
-        };
-        nextId++;
-        return restaurant;
-      }
-    });
+    data
+      .filter((item) => {
+        return item.name != null;
+      })
+      .map((item) => {
+        console.log("what is" + JSON.stringify(item));
+        if (!item.name) {
+          errors += 1;
+        } else {
+          let restaurant = {
+            id: nextId,
+            name: item.name,
+            servesBeer: item.servesBeer ? item.servesBeer : false,
+            type: item.type ? item.type : "",
+            description: item.description ? item.description : "",
+          };
+          nextId++;
+          return restaurant;
+        }
+      });
 
   restaurants = restaurants.concat(newRestaurants);
   let response = {
