@@ -36,42 +36,14 @@ app.post("/restaurant", (req, res) => {
     res.sendStatus(400);
     return;
   }
-
-  let errors = 0;
-  let newRestaurants =
-    data &&
-    data
-      .filter((item) => {
-        return item.name != null;
-      })
-      .map((item) => {
-        console.log("what is" + JSON.stringify(item));
-        if (!item.name) {
-          errors += 1;
-        } else {
-          let restaurant = {
-            id: nextId,
-            name: item.name,
-            servesBeer: item.servesBeer ? item.servesBeer : false,
-            type: item.type ? item.type : "",
-            description: item.description ? item.description : "",
-          };
-          nextId++;
-          return restaurant;
-        }
-      });
-
-  restaurants = restaurants.concat(newRestaurants);
-  let response = {
-    responseBody: newRestaurants,
-    transactionDetails: `${errors} of supplied entries were malformed and unable to be inserted`,
-  };
-
-  if (restaurants.length) {
-    res.status(201).json(response);
-  } else {
-    res.status(400);
-  }
+  db("entries")
+    .insert(data)
+    .then((result) => {
+      res.json({ success: true, message: result }); 
+    })
+    .catch((error) => {
+      res.json({ success: false, message: error });
+    });
 });
 
 app.listen(port, () => {
