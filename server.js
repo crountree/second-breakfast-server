@@ -6,59 +6,31 @@ app.use(express.json());
 const port = 3030;
 const cors = require("cors");
 const corsOptions = {
-   origin: 'http://localhost:3000', 
-   credentials: true,
-   optionSuccessStatus: 200
-}
+  origin: "http://localhost:3000",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
 app.use(cors(corsOptions));
 
-let restaurants = [
-  {
-    id: 1,
-    name: "Taste of Italy",
-    servesBeer: false,
-    type: "Italian",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-  {
-    id: 2,
-    name: "Nawab",
-    servesBeer: true,
-    type: "Indian",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-  {
-    id: 3,
-    name: "Genki",
-    servesBeer: true,
-    type: "Japanese",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-  {
-    id: 4,
-    name: "Mess Hall",
-    servesBeer: true,
-    type: "American",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-  },
-];
-
-let nextId = restaurants.length + 1;
+// DATABASE CONNECTION PROBABLY SHOULDN"T GO HERE???
+const db = require("./data/db-config.js");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
 app.get("/data", (req, res) => {
-  res.json(restaurants);
+  db("entries")
+    .then((entry) => {
+      res.json(entry);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "Failed to get Entries" });
+    });
 });
 
-app.post("/data", (req, res) => {
+app.post("/restaurant", (req, res) => {
   let data = req.body;
   if (!data) {
     res.sendStatus(400);
@@ -92,7 +64,7 @@ app.post("/data", (req, res) => {
   restaurants = restaurants.concat(newRestaurants);
   let response = {
     responseBody: newRestaurants,
-    errors: `Failed to create ${errors} items`,
+    transactionDetails: `${errors} of supplied entries were malformed and unable to be inserted`,
   };
 
   if (restaurants.length) {
