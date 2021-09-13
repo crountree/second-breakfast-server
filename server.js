@@ -20,13 +20,39 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/user", (req, res) => {
+  db("users")
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "Failed to get Users", error: error });
+    });
+});
+
+app.post("/user", (req, res) => {
+  let user = req.body;
+  if (!user) {
+    res.sendStatus(400);
+    return;
+  }
+  db("users")
+    .insert(user)
+    .then((result) => {
+      res.json({ success: true, message: result }); 
+    })
+    .catch((error) => {
+      res.json({ success: false, message: error });
+    });
+});
+
 app.get("/data", (req, res) => {
   db("entry")
     .then((entry) => {
       res.json(entry);
     })
-    .catch((err) => {
-      res.status(500).json({ message: "Failed to get Entries" });
+    .catch((error) => {
+      res.status(500).json({ message: "Failed to get Entries", error: error });
     });
 });
 
