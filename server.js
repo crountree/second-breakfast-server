@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/data", (req, res) => {
-  db("entries")
+  db("entry")
     .then((entry) => {
       res.json(entry);
     })
@@ -36,10 +36,10 @@ app.post("/restaurant", (req, res) => {
     res.sendStatus(400);
     return;
   }
-  db("entries")
+  db("entry")
     .insert(data)
     .then((result) => {
-      res.json({ success: true, message: result }); 
+      res.json({ success: true, message: result });
     })
     .catch((error) => {
       res.json({ success: false, message: error });
