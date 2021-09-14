@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  db("users")
+  db("user")
     .then((user) => {
       res.json(user);
     })
@@ -36,10 +36,10 @@ app.post("/user", (req, res) => {
     res.sendStatus(400);
     return;
   }
-  db("users")
+  db("user")
     .insert(user)
     .then((result) => {
-      res.json({ success: true, message: result }); 
+      res.json({ success: true, message: result });
     })
     .catch((error) => {
       res.json({ success: false, message: error });
